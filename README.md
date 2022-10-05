@@ -2,6 +2,9 @@
 
 Display a Scrum sprint board in terminal
 
+
+![](demo.png)
+
 ## Features
 
 - native in terminal
