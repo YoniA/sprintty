@@ -6,7 +6,7 @@ readonly BLUE="$(tput setaf 4)"
 readonly BOLD="$(tput bold)" 
 readonly BLINK="$(tput bold)" 
 readonly RESET="$(tput sgr0)"
-
+readonly uname$(uname)
 
 check_backlog() {
 	if ! [[ -f backlog ]]; then
@@ -23,7 +23,12 @@ check_backlog() {
 
 init_sprint() {
 	check_backlog
-	sed -i '' "/^$/d" backlog # remove empty lines
+	# remove empty lines	
+	if [[ $uname == 'Darwin' ]]; then
+		sed -i '' "/^$/d" backlog
+	else
+		sed -i "/^$/d" backlog
+	fi	
 	sed "s/$/,todo/" backlog > sprint.dat
 	draw_sprint
 }
@@ -67,7 +72,11 @@ get_status() {
 }
 
 set_status() {
-	sed -i ''	"$1s/,.*/,$2/" sprint.dat
+	if [[ $uname == 'Darwin' ]]; then
+		sed -i ''	"$1s/,.*/,$2/" sprint.dat
+	else
+		sed -i "$1s/,.*/,$2/" sprint.dat
+	fi	
 	draw_sprint
 }
 
