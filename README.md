@@ -1,6 +1,6 @@
 # sprintty - terminal sprint
 
-Display a Scrum sprint board in terminal
+sprin**tty** -  Display a Scrum sprint board in terminal
 
 
 ![](demo.png)
@@ -9,6 +9,7 @@ Display a Scrum sprint board in terminal
 
 - native in terminal
 - no external dependencies (the project uses only standard system tools)
+- compatible with Linux/macOS terminal
 
 
 ## Getting started
