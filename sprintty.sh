@@ -6,7 +6,7 @@ readonly BLUE="$(tput setaf 4)"
 readonly BOLD="$(tput bold)" 
 readonly BLINK="$(tput bold)" 
 readonly RESET="$(tput sgr0)"
-readonly uname$(uname)
+readonly uname=$(uname)
 
 check_backlog() {
 	if ! [[ -f backlog ]]; then
@@ -47,7 +47,7 @@ get_task() {
 	read -p "Enter task number to change status: " task_num
 	number_of_tasks=$(cat sprint.dat | wc -l)
 	# verify input is numerical
-	if (! [[ $task_num =~ ^[0-9]+$ ]] ); then
+	if (! [[ $task_num =~ ^[1-9][0-9]*$ ]] ); then
 		echo -e "${RED}Illegal task number.${RESET}"
 		get_task
 	fi
