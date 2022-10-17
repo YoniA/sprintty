@@ -21,26 +21,37 @@ check_backlog() {
 	fi
 }
 
-init_sprint() {
-	check_backlog
+prepare_sprint() {
 	# remove empty lines	
 	if [[ $uname == 'Darwin' ]]; then
 		sed -i '' "/^$/d" backlog
 	else
 		sed -i "/^$/d" backlog
 	fi	
-	sed "s/$/,todo/" backlog > sprint.dat
-	draw_sprint
+	
+	# truncate lines to mactch wall size and prevent overflow
+	# does not alter the backlog file
+	sed "s/^\(.\{40\}\).*/\1/" backlog > tmp
+
+	# add state to tasks
+	sed "s/$/##todo/" tmp > sprint.dat
+	rm tmp
 }
 
 draw_sprint() {
 	clear
 	echo -e "\n"
-	awk -F, -f board.awk sprint.dat
+	awk -F "##" -f board.awk sprint.dat
 
 	echo -e "\n\n"
 	get_task
 	get_status	
+}
+
+init_sprint() {
+	check_backlog
+	prepare_sprint
+	draw_sprint
 }
 
 get_task() {
@@ -73,9 +84,9 @@ get_status() {
 
 set_status() {
 	if [[ $uname == 'Darwin' ]]; then
-		sed -i ''	"$1s/,.*/,$2/" sprint.dat
+		sed -i ''	"$1s/##.*/##$2/" sprint.dat
 	else
-		sed -i "$1s/,.*/,$2/" sprint.dat
+		sed -i "$1s/##.*/##$2/" sprint.dat
 	fi	
 	draw_sprint
 }
