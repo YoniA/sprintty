@@ -91,4 +91,10 @@ set_status() {
 	draw_sprint
 }
 
-init_sprint
+
+if ! [[ -f sprint.dat ]]; then
+  init_sprint
+else
+  draw_sprint
+fi
+
