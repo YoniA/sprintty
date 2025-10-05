@@ -38,14 +38,30 @@ prepare_sprint() {
 	rm tmp
 }
 
+show_menu() {
+  read -p "Enter task number to change status (or + to add task): " choice
+  case $choice in
+    [0-9]*)
+      get_task $choice 
+      get_status	
+      ;;
+    +)
+      add_task
+      ;;
+    *)
+      echo -e "${RED}Illegal choice.${RESET}"
+      show_menu
+      ;;
+  esac
+}
+
 draw_sprint() {
 	clear
 	echo -e "\n"
 	awk -F "##" -f board.awk sprint.dat
 
 	echo -e "\n\n"
-	get_task
-	get_status	
+  show_menu
 }
 
 init_sprint() {
@@ -55,18 +71,19 @@ init_sprint() {
 }
 
 get_task() {
-	read -p "Enter task number to change status: " task_num
-	number_of_tasks=$(cat sprint.dat | wc -l)
-	# verify input is numerical
-	if (! [[ $task_num =~ ^[1-9][0-9]*$ ]] ); then
-		echo -e "${RED}Illegal task number.${RESET}"
-		get_task
-	fi
-	# verify input in range 
-	if (($task_num > $number_of_tasks)); then
-		echo -e "${RED}Illegal task number.${RESET}"
-		get_task
-	fi
+  task_num=$1
+  #read -p "Enter task number to change status: " task_num
+  number_of_tasks=$(cat sprint.dat | wc -l)
+  # verify input is numerical
+  if (! [[ $task_num =~ ^[1-9][0-9]*$ ]] ); then
+    echo -e "${RED}Illegal task number.${RESET}"
+    show_menu
+  fi
+  # verify input in range 
+  if (($task_num > $number_of_tasks)); then
+    echo -e "${RED}Illegal task number.${RESET}"
+    show_menu
+  fi
 }
 
 get_status() {
@@ -89,6 +106,13 @@ set_status() {
 		sed -i "$1s/##.*/##$2/" sprint.dat
 	fi	
 	draw_sprint
+}
+
+add_task () {
+  read -p "New task: " task
+  echo $task >> backlog 
+  echo "${task}##todo" >> sprint.dat
+  draw_sprint
 }
 
 
