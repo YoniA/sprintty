@@ -101,7 +101,8 @@ get_status() {
 
 set_status() {
 	if [[ $uname == 'Darwin' ]]; then
-		sed -i ''	"$1s/##.*/##$2/" sprint.dat
+		# sed -i '' "$1s/##.*/##$2/" sprint.dat
+		sed -i "$1s/##.*/##$2/" sprint.dat
 	else
 		sed -i "$1s/##.*/##$2/" sprint.dat
 	fi	
